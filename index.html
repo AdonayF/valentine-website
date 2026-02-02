@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>One More Question 💘</title>
+  <style>
+    :root{
+      --bg1:#fff1f7;
+      --bg2:#f3f8ff;
+      --card:#ffffffcc;
+      --ink:#1f2430;
+      --muted:#5a6272;
+      --pink:#ff4d8d;
+      --pink2:#ff77a9;
+      --good:#16a34a;
+      --bad:#ef4444;
+      --shadow: 0 20px 50px rgba(18, 18, 18, .12);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
+    body{
+        margin:0;
+        min-height:100vh;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+        color:var(--ink);
+        background: linear-gradient(135deg, #ff9ac2, #ffd1e3, #ffb3d5);
+        overflow-x:hidden;
+    }
+
+    .wrap{
+      width:min(980px, 92vw);
+      margin:0 auto;
+      padding:28px 0 40px;
+      position:relative;
+    }
+
+    /* Floating hearts background */
+    .heart {
+      position: fixed;
+      width: 14px; height: 14px;
+      background: var(--pink);
+      transform: rotate(45deg);
+      opacity:.18;
+      pointer-events:none;
+      filter: blur(.2px);
+      animation: floatUp linear infinite;
+    }
+    .heart:before, .heart:after{
+      content:"";
+      position:absolute;
+      width: 14px; height: 14px;
+      background: var(--pink);
+      border-radius: 50%;
+    }
+    .heart:before{ left:-7px; top:0;}
+    .heart:after{ left:0; top:-7px;}
+    @keyframes floatUp{
+      from { transform: translateY(120vh) rotate(45deg); }
+      to   { transform: translateY(-20vh) rotate(45deg); }
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 4px 18px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      background:#ffffffc7;
+      border:1px solid rgba(0,0,0,.06);
+      border-radius:999px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.06);
+      backdrop-filter: blur(10px);
+      font-weight:600;
+      color:var(--muted);
+    }
+    .badge span{font-size:14px}
+    .title{
+      text-align:center;
+      margin:18px 0 10px;
+    }
+    .title h1{
+      margin:0;
+      font-size: clamp(28px, 4vw, 46px);
+      letter-spacing:-.03em;
+      line-height:1.05;
+    }
+    .title p{
+      margin:10px auto 0;
+      max-width: 52ch;
+      color:var(--muted);
+      font-size: 15px;
+      line-height:1.55;
+    }
+
+    .card{
+      margin:18px auto 0;
+      background: var(--card);
+      border:1px solid rgba(0,0,0,.06);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      padding: 18px;
+    }
+
+    .progressRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:14px;
+    }
+    .bar{
+      flex:1;
+      height:10px;
+      background: rgba(0,0,0,.06);
+      border-radius: 999px;
+      overflow:hidden;
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--pink), var(--pink2));
+      border-radius: 999px;
+      transition: width .35s ease;
+    }
+    .small{
+      color:var(--muted);
+      font-size:13px;
+      font-weight:600;
+      white-space:nowrap;
+    }
+
+    .q{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding: 6px 2px 4px;
+    }
+    .q h2{
+      margin:0;
+      font-size: clamp(18px, 2.3vw, 22px);
+      letter-spacing:-.01em;
+    }
+    .q .hint{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+      margin-top:-4px;
+    }
+
+    .options{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:12px;
+      margin-top: 8px;
+    }
+    @media (max-width: 640px){
+      .options{ grid-template-columns: 1fr; }
+    }
+    .opt{
+      border:none;
+      cursor:pointer;
+      text-align:left;
+      padding: 14px 14px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.08);
+      box-shadow: 0 10px 25px rgba(0,0,0,.06);
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      font-weight:700;
+      color:var(--ink);
+    }
+    .opt:hover{ transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0,0,0,.08); }
+    .opt:active{ transform: translateY(0px); }
+    .pill{
+      font-size:12px;
+      font-weight:800;
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(255, 77, 141, .12);
+      color: var(--pink);
+      border:1px solid rgba(255, 77, 141, .18);
+      white-space:nowrap;
+    }
+
+    .feedback{
+      margin-top: 12px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      display:none;
+      border:1px solid rgba(0,0,0,.06);
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(0,0,0,.05);
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .feedback.show{ display:flex; }
+    .feedback .msg{
+      font-weight:800;
+    }
+    .feedback .sub{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:600;
+      margin-top:2px;
+    }
+    .feedback.good .msg{ color: var(--good); }
+    .feedback.bad  .msg{ color: var(--bad); }
+
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-top: 14px;
+    }
+    .btn{
+      border:none;
+      cursor:pointer;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight:800;
+      background: #ffffff;
+      border:1px solid rgba(0,0,0,.1);
+      box-shadow: 0 10px 25px rgba(0,0,0,.06);
+      transition: transform .12s ease, box-shadow .12s ease;
+      color: var(--ink);
+    }
+    .btn:hover{ transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0,0,0,.08); }
+    .btn:active{ transform: translateY(0px); }
+    .btn.primary{
+      background: linear-gradient(90deg, var(--pink), var(--pink2));
+      color:#fff;
+      border: none;
+    }
+    .btn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      transform:none;
+      box-shadow:none;
+    }
+
+    /* Final screen */
+    .final{
+      text-align:center;
+      padding: 18px 10px 10px;
+      display:none;
+    }
+    .final.show{ display:block; }
+    .final h2{
+      font-size: clamp(22px, 3vw, 32px);
+      margin: 4px 0 8px;
+      letter-spacing:-.02em;
+    }
+    .final p{
+      color:var(--muted);
+      margin:0 auto 14px;
+      max-width: 55ch;
+      line-height:1.55;
+      font-weight:600;
+    }
+    .valRow{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top: 14px;
+    }
+    .big{
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 16px;
+    }
+
+    /* "No" button dodges */
+    .dodge{
+      position: relative;
+    }
+
+    /* Modal */
+    .modalWrap{
+      position:fixed;
+      inset:0;
+      display:none;
+      place-items:center;
+      background: rgba(0,0,0,.35);
+      padding: 18px;
+      z-index: 50;
+    }
+    .modalWrap.show{ display:grid; }
+    .modal{
+      width:min(640px, 94vw);
+      background:#fff;
+      border-radius: 22px;
+      padding: 18px 18px 14px;
+      box-shadow: 0 30px 70px rgba(0,0,0,.25);
+      border:1px solid rgba(0,0,0,.08);
+      text-align:center;
+    }
+    .modal h3{
+      margin: 6px 0 6px;
+      font-size: 26px;
+      letter-spacing:-.02em;
+    }
+    .modal p{
+      margin:0 auto 14px;
+      max-width: 60ch;
+      color: var(--muted);
+      line-height:1.6;
+      font-weight:600;
+    }
+    .sparkle{
+      font-size: 42px;
+      line-height:1;
+      margin-top: 4px;
+    }
+    footer{
+      text-align:center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 16px;
+      font-weight:700;
+      opacity:.75;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="badge"><span>💌</span><span>Mini Love Quiz</span></div>
+      <div class="badge" id="scoreBadge"><span>⭐</span><span>Score: 0</span></div>
+    </header>
+
+    <div class="title">
+      <h1>Before I ask you something… 💗</h1>
+      <p>
+        Answer these quick questions (no pressure). If you get them “wrong”, you still pass.
+        You’re the prize anyway.
+      </p>
+    </div>
+
+    <div class="card" id="quizCard">
+      <div class="progressRow">
+        <div class="bar"><div id="barFill"></div></div>
+        <div class="small" id="stepText">Question 1 of 5</div>
+      </div>
+
+      <div class="q">
+        <h2 id="qText">Loading…</h2>
+        <div class="hint" id="qHint"></div>
+
+        <div class="options" id="options"></div>
+
+        <div class="feedback" id="feedback">
+          <div>
+            <div class="msg" id="fbMsg"></div>
+            <div class="sub" id="fbSub"></div>
+          </div>
+          <div class="pill" id="fbPill">Next ➜</div>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="backBtn">← Back</button>
+          <button class="btn primary" id="nextBtn" disabled>Next</button>
+        </div>
+      </div>
+
+      <div class="final" id="finalScreen">
+        <div class="sparkle">✨💘✨</div>
+        <h2>Okay… last question.</h2>
+        <p>
+          No more quiz. Just me asking you directly—because I mean it.
+        </p>
+
+        <div class="valRow" style="margin-bottom:8px;">
+          <button class="btn primary big" id="yesBtn">Yes, I’ll be your Valentine 💞</button>
+          <button class="btn big dodge" id="noBtn">No 😭</button>
+        </div>
+
+        <div class="valRow">
+          <button class="btn" id="restartBtn">Restart Quiz</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Made with Love and Passion
+    </footer>
+  </div>
+
+  <div class="modalWrap" id="modalWrap">
+    <div class="modal">
+      <div class="sparkle">🌹</div>
+      <h3>YAYYYY 💖</h3>
+      <p id="modalText">
+        You just made me the happiest person. Happy Valentine’s, my love.
+      </p>
+      <button class="btn primary big" id="closeModalBtn">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // ----- Customize names/messages here if you want -----
+    const YOUR_NAME = "Adonay"; // change or leave
+    const SWEET_LINE = "Happy Valentine’s, SARSURAAAAAAAAAAAAAA. 💗";
+
+    // Quiz data
+    const questions = [
+      {
+        text: "Where was our first date?",
+        hint: "Think: the place we both know too well 😄",
+        options: ["Lakeview", "McKenny", "At the soccer field", "Student Center"],
+        correctIndex: 3,
+        correctText: "Student Center 💘",
+      },
+      {
+        text: "When did I tell you that I love you?",
+        hint: "One of these is the real one (and I remember it).",
+        options: ["March 16", "March 26", "March 7", "March 27"],
+        correctIndex: 3,
+        correctText: "March 27 💗",
+      },
+      {
+        text: "On our second date (McKenny), what were you wearing?",
+        hint: "You looked too good… I couldn’t forget.",
+        options: ["Black jeans with a jacket", "Blue jeans with a jacket", "Brown set", "Black set"],
+        correctIndex: 2,
+        correctText: "Your brown set 🤎",
+      },
+      {
+        text: "What was the first food we ate together?",
+        hint: "I can still taste it tbh 😭",
+        options: ["Pizza", "Chicken burger", "Starbucks", "Burger"],
+        correctIndex: 1,
+        correctText: "Chicken burger 🍔",
+      },
+      {
+        text: "Where did we agree we should visit first on our honeymoon?",
+        hint: "Pick the one that feels like ‘us’.",
+        options: ["Maldives", "Greece", "Disney World", "Bora Bora"],
+        correctIndex: 0,
+        correctText: "Maldives 🏝️",
+      },
+    ];
+
+    // State
+    let i = 0;
+    let score = 0;
+    const chosen = new Array(questions.length).fill(null);
+    let canProceed = false;
+
+    // Elements
+    const qText = document.getElementById("qText");
+    const qHint = document.getElementById("qHint");
+    const optionsEl = document.getElementById("options");
+    const backBtn = document.getElementById("backBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const feedback = document.getElementById("feedback");
+    const fbMsg = document.getElementById("fbMsg");
+    const fbSub = document.getElementById("fbSub");
+    const fbPill = document.getElementById("fbPill");
+    const barFill = document.getElementById("barFill");
+    const stepText = document.getElementById("stepText");
+    const scoreBadge = document.getElementById("scoreBadge");
+
+    const finalScreen = document.getElementById("finalScreen");
+    const quizCard = document.getElementById("quizCard");
+
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const modalWrap = document.getElementById("modalWrap");
+    const modalText = document.getElementById("modalText");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+
+    // Floating hearts
+    function spawnHearts(count = 18){
+      for(let k=0;k<count;k++){
+        const h = document.createElement("div");
+        h.className = "heart";
+        const left = Math.random()*100;
+        const dur = 8 + Math.random()*10;
+        const delay = Math.random()*-20;
+        const size = 10 + Math.random()*18;
+        h.style.left = left + "vw";
+        h.style.animationDuration = dur + "s";
+        h.style.animationDelay = delay + "s";
+        h.style.width = size + "px";
+        h.style.height = size + "px";
+        h.style.opacity = 0.10 + Math.random()*0.14;
+        // color variety
+        const r = 255;
+        const g = 77 + Math.floor(Math.random()*40);
+        const b = 141 + Math.floor(Math.random()*40);
+        h.style.background = `rgb(${r},${g},${b})`;
+        document.body.appendChild(h);
+      }
+    }
+    spawnHearts();
+
+    function updateScoreBadge(){
+      scoreBadge.querySelector("span:last-child").textContent = `Score: ${score}`;
+    }
+
+    function render(){
+      // If finished, show final
+      const total = questions.length;
+      const pct = Math.round((i / total) * 100);
+      barFill.style.width = `${pct}%`;
+      stepText.textContent = `Question ${Math.min(i+1,total)} of ${total}`;
+
+      backBtn.disabled = (i === 0);
+      nextBtn.disabled = !canProceed;
+
+      feedback.classList.remove("show", "good", "bad");
+
+      const q = questions[i];
+      qText.textContent = q.text;
+      qHint.textContent = q.hint;
+
+      optionsEl.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "opt";
+        btn.innerHTML = `<span>${opt}</span><span class="pill">Tap</span>`;
+        btn.addEventListener("click", () => choose(idx));
+        optionsEl.appendChild(btn);
+      });
+
+      // if already chosen, show feedback and enable next
+      if(chosen[i] !== null){
+        showFeedback(chosen[i]);
+        canProceed = true;
+        nextBtn.disabled = false;
+      }
+    }
+
+    function showFeedback(selectedIdx){
+      const q = questions[i];
+      const correct = (selectedIdx === q.correctIndex);
+
+      feedback.classList.add("show");
+      feedback.classList.toggle("good", correct);
+      feedback.classList.toggle("bad", !correct);
+
+      fbMsg.textContent = correct ? "Correct 😌💗" : "Close enough 😭💗";
+      fbSub.textContent = correct ? q.correctText : `It was: ${q.correctText}`;
+      fbPill.textContent = (i === questions.length - 1) ? "Finish ➜" : "Next ➜";
+    }
+
+    function choose(idx){
+      const q = questions[i];
+
+      // If previously chosen, undo previous scoring
+      if(chosen[i] !== null){
+        const prevCorrect = (chosen[i] === q.correctIndex);
+        if(prevCorrect) score = Math.max(0, score - 1);
+      }
+
+      chosen[i] = idx;
+
+      const correct = (idx === q.correctIndex);
+      if(correct) score += 1;
+      updateScoreBadge();
+
+      canProceed = true;
+      nextBtn.disabled = false;
+
+      // animate feedback
+      showFeedback(idx);
+      feedback.animate(
+        [{ transform:"translateY(6px)", opacity:.0 }, { transform:"translateY(0)", opacity:1 }],
+        { duration: 220, easing:"ease-out" }
+      );
+    }
+
+    function goNext(){
+      if(!canProceed) return;
+      if(i < questions.length - 1){
+        i += 1;
+        canProceed = (chosen[i] !== null);
+        render();
+      } else {
+        // Show final
+        barFill.style.width = "100%";
+        stepText.textContent = `Done 💘`;
+        document.querySelector(".q").style.display = "none";
+        finalScreen.classList.add("show");
+      }
+    }
+
+    function goBack(){
+      if(i === 0) return;
+      i -= 1;
+      canProceed = (chosen[i] !== null);
+      render();
+    }
+
+    // "No" button dodge
+    function dodgeNo(){
+      const pad = 14;
+      const wrapRect = quizCard.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const maxX = Math.max(pad, wrapRect.width - btnRect.width - pad);
+      const maxY = Math.max(pad, 220); // keep it in the card area
+
+      const x = Math.floor(Math.random() * maxX);
+      const y = Math.floor(Math.random() * maxY);
+
+      // Use translate to move around
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+      noBtn.style.transition = "transform .14s ease";
+    }
+
+    // Final "Yes" modal
+    function openModal(){
+      modalText.textContent = `${SWEET_LINE}\n\n— ${YOUR_NAME}`;
+      modalWrap.classList.add("show");
+      // confetti-ish hearts: spawn a few more
+      spawnHearts(10);
+    }
+    function closeModal(){
+      modalWrap.classList.remove("show");
+    }
+
+    function restart(){
+      i = 0;
+      score = 0;
+      for(let k=0;k<chosen.length;k++) chosen[k] = null;
+      canProceed = false;
+      updateScoreBadge();
+
+      document.querySelector(".q").style.display = "";
+      finalScreen.classList.remove("show");
+      noBtn.style.transform = "translate(0,0)";
+
+      render();
+    }
+
+    backBtn.addEventListener("click", goBack);
+    nextBtn.addEventListener("click", goNext);
+    feedback.addEventListener("click", goNext);
+
+    yesBtn.addEventListener("click", openModal);
+    closeModalBtn.addEventListener("click", closeModal);
+    modalWrap.addEventListener("click", (e) => { if(e.target === modalWrap) closeModal(); });
+
+    // dodge on hover + click (desktop & mobile)
+    noBtn.addEventListener("mouseenter", dodgeNo);
+    noBtn.addEventListener("touchstart", (e)=>{ e.preventDefault(); dodgeNo(); }, {passive:false});
+    noBtn.addEventListener("click", (e)=>{ e.preventDefault(); dodgeNo(); });
+
+    restartBtn.addEventListener("click", restart);
+
+    updateScoreBadge();
+    render();
+  </script>
+</body>
+</html>
